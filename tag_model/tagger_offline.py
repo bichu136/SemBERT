@@ -27,7 +27,7 @@ class srl_labeler():
                 all_data.append(line)
             print(all_data[0])
             data_chunk = [all_data[i:i + batch] for i in range(0, len(all_data), batch)]
-            for data_sent in tqdm(data_chunk):
+            for data_sent in data_chunk:
                 text_a = [{"sentence": sent[index_a]} for sent in data_sent]
                 text_a_tags = self.post_allen(text_a)
                 if has_b:

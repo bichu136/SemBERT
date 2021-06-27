@@ -1,11 +1,14 @@
+import allennlp_models
 from allennlp.predictors import Predictor
+
+from allennlp_models.structured_prediction.predictors.srl import SemanticRoleLabelerPredictor
 import json
 
 class SRLPredictor(object):
     def __init__(self,SRL_MODEL_PATH):
         # use the model from allennlp for simlicity.
         self.predictor = Predictor.from_path(SRL_MODEL_PATH)
-        self.predictor._model = self.predictor._model.cuda()  # this can only support GPU computation
+        self.predictor._model = self.predictor._model  # this can only support GPU computation
 
     def predict(self, sent):
         return self.predictor.predict(sentence=sent)
