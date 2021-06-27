@@ -78,11 +78,11 @@ The major difference is that `run_classifier.py` takes labeled data as input, wh
 ```shell
 CUDA_VISIBLE_DEVICES=0 \
 python run_classifier.py \
---data_dir glue_data/SNLI/ \
---task_name snli \
+--data_dir glue_data/MNLI/ \
+--task_name mnli \
 --eval_batch_size 128 \
 --max_seq_length 128 \
---bert_model bert-wwm-uncased \
+--bert_model ./snli_model_dir \
 --do_eval \
 --do_lower_case \
 --max_num_aspect 3 \
@@ -115,7 +115,7 @@ python run_snli_predict.py \
 --do_lower_case \
 --bert_model snli_model_dir \
 --output_dir snli_model_dir \
---tagger_path srl_model_dir
+--tagger_path srl-model-dir
 ```
 
 For prediction, use the flag: `--do_predict` for either the script `run_classifier.py` or `run_snli_predict.py`. The output pred file can be directly used for GLUE online submission and evaluation.

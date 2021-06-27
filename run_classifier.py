@@ -8,7 +8,7 @@ import logging
 import os
 import random
 import sys
-
+import time
 import numpy as np
 import torch
 import pickle
@@ -253,19 +253,20 @@ class MnliProcessor(DataProcessor):
         continue
       guid = "%s-%s" % (set_type, line[0])
       if set_type == "test":  #org data process
-          text_a = line[-3]   #due to inccorect process
-          text_b = line[-2]
+        #   print('testing')
+          text_a = line[1]
+          text_b = line[2]
           label = "contradiction"
       elif set_type == "diag":
-          text_a = line[-2]
-          text_b = line[-1]
+          text_a = line[-8]
+          text_b = line[-7]
           label = "contradiction"
       else:
-          text_a = line[-3]
-          text_b = line[-2]
+          text_a = line[1]
+          text_b = line[2]
           label = line[-1]
-      examples.append(
-          InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
+      k = InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label)
+      examples.append(k)
     return examples
 
 class QqpProcessor(DataProcessor):
@@ -475,8 +476,8 @@ class WnliProcessor(DataProcessor):
         text_b = line[-1]
         label = "0"
       else:
-        text_a = line[-3]
-        text_b = line[-2]
+        text_a = line[1]
+        text_b = line[2]
         label = line[-1]
       examples.append(
           InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
@@ -580,16 +581,16 @@ def convert_examples_to_features(examples, label_list, max_seq_length, tokenizer
         assert len(segment_ids) == max_seq_length
 
         label_id = label_map[example.label]
-        if ex_index < 5:
-            logger.info("*** Example ***")
-            logger.info("guid: %s" % (example.guid))
-            logger.info("tokens: %s" % " ".join(
-                    [str(x) for x in tokens]))
-            logger.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
-            logger.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
-            logger.info(
-                    "segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
-            logger.info("label: %s (id = %d)" % (example.label, label_id))
+        # if ex_index < 5:
+        #     logger.info("*** Example ***")
+        #     logger.info("guid: %s" % (example.guid))
+        #     logger.info("tokens: %s" % " ".join(
+        #             [str(x) for x in tokens]))
+        #     logger.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
+        #     logger.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
+        #     logger.info(
+        #             "segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
+        #     logger.info("label: %s (id = %d)" % (example.label, label_id))
 
         features.append(
                 InputFeatures(input_ids=input_ids,
@@ -805,7 +806,7 @@ def main():
     }
 
     if args.local_rank == -1 or args.no_cuda:
-        device = torch.device("cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")
+        device = 'cpu'# torch.device("cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")
         n_gpu = torch.cuda.device_count()
     else:
         torch.cuda.set_device(args.local_rank)
@@ -835,9 +836,7 @@ def main():
         raise ValueError("Output directory ({}) already exists and is not empty.".format(args.output_dir))
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
-
     task_name = args.task_name.lower()
-
     if task_name not in processors:
         raise ValueError("Task not found: %s" % (task_name))
 
@@ -969,7 +968,7 @@ def main():
             model.train()
             tr_loss = 0
             nb_tr_examples, nb_tr_steps = 0, 0
-            for step, batch in enumerate(tqdm(train_dataloader, desc="Iteration")):
+            for step, batch in enumerate(train_dataloader, desc="Iteration"):
                 batch = tuple(t.to(device) for t in batch)
                 input_ids, input_mask, segment_ids, start_end_idx, input_tag_ids, label_ids = batch
                 loss = model(input_ids, segment_ids, input_mask, start_end_idx, input_tag_ids,  label_ids)
@@ -1000,7 +999,7 @@ def main():
             if args.do_train:
                 torch.save(model_to_save.state_dict(), output_model_file)
             if args.do_eval and (args.local_rank == -1 or torch.distributed.get_rank() == 0):
-                model_state_dict = torch.load(output_model_file)
+                model_state_dict = torch.load(output_model_file,map_location='cpu')
                 predict_model = BertForSequenceClassificationTag.from_pretrained(args.bert_model, state_dict=model_state_dict,num_labels = num_labels,tag_config=tag_config)
                 predict_model.to(device)
                 predict_model.eval()
@@ -1013,8 +1012,7 @@ def main():
                 with open(output_logits_file, "w") as writer:
                     writer.write(
                         "index" + "\t" + "\t".join(["logits " + str(i) for i in range(len(label_list))]) + "\n")
-                    for input_ids, input_mask, segment_ids, start_end_idx, input_tag_ids, label_ids in tqdm(
-                            eval_dataloader, desc="Evaluating"):
+                    for input_ids, input_mask, segment_ids, start_end_idx, input_tag_ids, label_ids in eval_dataloader:
                         input_ids = input_ids.to(device)
                         input_mask = input_mask.to(device)
                         segment_ids = segment_ids.to(device)
@@ -1090,7 +1088,7 @@ def main():
 
     if args.do_eval:
         #for epoch in ["1"]:
-        for epoch in trange(int(args.num_train_epochs), desc="Epoch"):
+        for epoch in range(0,int(args.num_train_epochs)):
             eval_examples = processor.get_dev_examples(args.data_dir)
             eval_features = convert_examples_to_features(
                 eval_examples, label_list, args.max_seq_length, tokenizer, srl_predictor=srl_predictor)
@@ -1113,8 +1111,8 @@ def main():
             eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=args.eval_batch_size)
 
             # epoch = 1
-            output_model_file = os.path.join(args.output_dir, str(epoch) + "_pytorch_model.bin")
-            model_state_dict = torch.load(output_model_file)
+            output_model_file = os.path.join(args.output_dir,"pytorch_model.bin")
+            model_state_dict = torch.load(output_model_file,map_location='cpu')
             predict_model = BertForSequenceClassificationTag.from_pretrained(args.bert_model,
                                                                              state_dict=model_state_dict,
                                                                              num_labels=num_labels,
@@ -1124,8 +1122,7 @@ def main():
             eval_loss, eval_accuracy = 0, 0
             nb_eval_steps, nb_eval_examples = 0, 0
             total_TP, total_FP, total_FN, total_TN = 0, 0, 0, 0
-            for input_ids, input_mask, segment_ids, start_end_idx, input_tag_ids, label_ids in tqdm(
-                    eval_dataloader, desc="Evaluating"):
+            for input_ids, input_mask, segment_ids, start_end_idx, input_tag_ids, label_ids in eval_dataloader:
                 input_ids = input_ids.to(device)
                 input_mask = input_mask.to(device)
                 segment_ids = segment_ids.to(device)
@@ -1201,18 +1198,18 @@ def main():
                                   all_input_tag_ids)
         # Run prediction for full data
         eval_sampler = SequentialSampler(eval_data)
-        eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=args.eval_batch_size)
+        eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=1)
 
-        output_model_file = os.path.join(args.output_dir, str(best_epoch)+ "_pytorch_model.bin")
-        model_state_dict = torch.load(output_model_file)
+        output_model_file = os.path.join("./snli_model_dir/pytorch_model.bin")
+        model_state_dict = torch.load(output_model_file,map_location='cpu')
         predict_model = BertForSequenceClassificationTag.from_pretrained(args.bert_model, state_dict=model_state_dict,num_labels = num_labels,tag_config=tag_config)
         predict_model.to(device)
         predict_model.eval()
         predictions = []
         output_logits_file = os.path.join(args.output_dir, str(best_epoch) + "_logits_results.tsv")
         with open(output_logits_file, "w") as writer:
-            for input_ids, input_mask, segment_ids, start_end_idx, input_tag_ids in tqdm(
-                    eval_dataloader, desc="Evaluating"):
+            for input_ids, input_mask, segment_ids, start_end_idx, input_tag_ids in eval_dataloader:
+                
                 input_ids = input_ids.to(device)
                 input_mask = input_mask.to(device)
                 segment_ids = segment_ids.to(device)

@@ -606,7 +606,7 @@ def main():
             model.train()
             tr_loss = 0
             nb_tr_examples, nb_tr_steps = 0, 0
-            for step, batch in enumerate(tqdm(train_dataloader, desc="Iteration")):
+            for step, batch in enumerate(train_dataloader):
                 batch = tuple(t.to(device) for t in batch)
                 input_ids, input_mask, segment_ids, start_end_idx, input_tag_ids, label_ids = batch
                 loss = model(input_ids, segment_ids, input_mask, start_end_idx, input_tag_ids,  label_ids)
@@ -645,7 +645,7 @@ def main():
                 nb_eval_steps, nb_eval_examples = 0, 0
                 total_pred, total_labels = [],[]
                 total_TP, total_FP, total_FN, total_TN = 0, 0, 0, 0
-                for input_ids, input_mask, segment_ids, start_end_idx, input_tag_ids, label_ids in tqdm(eval_dataloader, desc="Evaluating"):
+                for input_ids, input_mask, segment_ids, start_end_idx, input_tag_ids, label_ids in eval_dataloader:
                     input_ids = input_ids.to(device)
                     input_mask = input_mask.to(device)
                     segment_ids = segment_ids.to(device)
@@ -713,8 +713,7 @@ def main():
         predict_model.to(device)
         predict_model.eval()
         predictions = []
-        for input_ids, input_mask, segment_ids, start_end_idx, input_tag_ids in tqdm(
-                eval_dataloader, desc="Evaluating"):
+        for input_ids, input_mask, segment_ids, start_end_idx, input_tag_ids in eval_dataloader:
             input_ids = input_ids.to(device)
             input_mask = input_mask.to(device)
             segment_ids = segment_ids.to(device)
