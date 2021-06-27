@@ -44,7 +44,7 @@ def convert_examples_to_clean_examples(examples, tokenizer):
 
     clean_examples = []
 
-    for (example_index, example) in enumerate(tqdm(examples, desc="Converting")):
+    for (example_index, example) in enumerate(examples):
         question_tokens = tokenizer.tokenize(example.question_text)
 
         clean_question_text = detokenize(question_tokens)
@@ -239,7 +239,7 @@ def convert_tag_examples_to_tag_features(tag_examples, features, max_query_lengt
     assert len(all_aligned_question_tags) == len(tag_examples)
     assert len(all_aligned_doc_tags) == len(tag_examples)
 
-    for (feature_index, feature) in enumerate(tqdm(features, desc="Converting tags")):
+    for (feature_index, feature) in enumerate(features):
         example_index = feature.example_index
         question_tags = all_aligned_question_tags[example_index]
         doc_tags = all_aligned_doc_tags[example_index]
@@ -306,7 +306,7 @@ def iter_data(datas, n_batch=128, truncate=False, verbose=False, max_batches=flo
         f = sys.stderr
     else:
         f = open(os.devnull, 'w')
-    for i in tqdm(range(0, n, n_batch), total=n//n_batch, file=f, ncols=80, leave=False):
+    for i in range(0, n, n_batch):
         if n_batches >= max_batches: raise StopIteration
 
         yield datas[i:i+n_batch]
