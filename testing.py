@@ -19,4 +19,4 @@ def test():
     return flk.jsonify(d)
 
 if __name__ == '__main__':
-    app.run(debug=True,port=int(os.environ.get('PORT', 13600)),host='0.0.0.0')
+    app.run(debug=False,port=int(os.environ.get('PORT', 13600)),host='0.0.0.0')
