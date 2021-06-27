@@ -81,5 +81,5 @@ def process():
     d = {"result":label_list[predictions[0]]}
     return flk.jsonify(d)
 if __name__ == '__main__':
-    app.run(debug=False,port=int(os.environ.get('PORT', 13600)))
+    app.run(debug=True,port=int(os.environ.get('PORT', 13600)))
     
