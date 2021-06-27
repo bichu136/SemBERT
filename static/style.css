@@ -1,0 +1,279 @@
+*{
+	margin: 0;
+	padding: 0;
+	font-family: Open Sans;
+}
+
+@font-face{
+	font-family: Open Sans;
+	src:url("Fonts/Open_Sans/OpenSans-Regular.ttf");
+
+}
+
+.btn-nut{
+	margin-left: 87%;
+}
+
+body {   
+background: url(./img/backgr1.jpg) no-repeat center center fixed;   
+-webkit-background-size: cover;  
+-moz-background-size: cover;  
+-o-background-size: cover;  
+background-size: cover;
+}
+ 
+.container{ 
+padding-top: 10px;
+}
+
+.header-logo{display:inline-block;margin-top:0px;float:left;}
+.header-logo .logo{background:url(./img/logo_full.png) 0px 0px;width:470px;height:114px;display:block;}
+
+
+.clear{clear:both;}
+
+/*sub-menu*/
+.dropdown{
+	position: relative;
+	display: inline-block;
+}
+
+.dropdown-content{
+	display: none;
+	position: absolute;
+	background-color: #f5f5f5;
+	z-index: 1;
+	list-style: none;
+}
+
+.dropdown:hover .dropdown-content{
+   display: block;
+}
+/*****/
+
+.khoi{
+	width: 100%;
+	height: 100%;
+	background-color: #282828;
+	text-emphasis-color: red;
+}
+
+.film_thumbnail{
+	font-style: normal;
+	font-family: Tahoma;
+	text-decoration: none;
+	padding-right: 0px;
+	margin-right:0px;
+}
+
+.film_card{
+	border-color: black;
+	border: 5px;
+	margin-right: 0px;
+}
+
+/*nominated movie*/
+.slide{
+	width: 100%;
+	height: 500px;
+	overflow: hidden;
+	display: block;
+
+}
+
+.container .slide{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.font_random_suggest{
+	color:white;
+	font-size: 40px;
+    font-weight: bold;
+    font-family: Trebuchet MS; 
+    background: rgba(0,0,0,0.5);
+    padding: 8px;
+}
+
+.thumbnail-vid{
+    size: 80px 100px;
+    max-width: 80%;
+    max-height: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin: 5px;
+}
+.card-img-top{
+	max-width:100%;
+  	height: 20rem;
+  	object-fit: contain;
+  	padding-left: 5px;
+  	padding-right: 5px;
+}
+
+/*info-film*/
+.movie-name{
+	font-size: 25px;
+	text-align: center;
+	color:red;
+}
+
+.movie-cagetory{
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.movie-year{
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.movie-content{
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.movie-new-ep{
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.anime_info{
+	height: 18rem;
+	max-height: 25rem;
+}
+/* End Info Film */
+
+#BackToTop_BTN {
+  display: none; /* Hidden by default */
+  position: fixed; /* Fixed/sticky position */
+  bottom: 20px; /* Place the button at the bottom of the page */
+  right: 18px; /* Place the button 30px from the right */
+  z-index: 99; /* Make sure it does not overlap */
+  border: none; /* Remove borders */
+  outline: none; /* Remove outline */
+  background:url(/static/img/backtotop-btn.png) 0px 0px;width:80px;height:80px; display: hidden;
+  cursor: pointer; /* Add a mouse pointer on hover */
+  padding: 15px; /* Some padding */
+}
+
+.col-listfilm{
+	padding: 0px 0px;
+	max-width: 75%;
+}
+
+.text-listfilm{
+	font-size: 15px;
+	text-align: center;
+	max-height: 25%;
+	padding: 0px;
+	padding-bottom: 5px;
+}
+
+.ribbon{
+	position: relative;
+	z-index: 1000;
+	top:12%;
+	left:12%;
+	max-width: 100%;
+	color:white;
+	
+}
+
+
+.ribbon_info{
+	position: absolute;
+	z-index: 1000;
+	bottom:10px;
+	left:1.5%;
+	width: 97%;
+	height:75%;
+	background-image: linear-gradient(rgba(255,255,255,0), rgba(75,75,75,90));;
+	opacity: 0;
+	transition: 1s;
+}
+.ribbon_info:hover {opacity: 1}
+
+
+.scroll-up {
+	height: 225px;	
+	overflow: hidden;
+	position: relative;
+	background:rgba(255,255,255,0);
+	color: white;
+   }
+   .scroll-up p {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	text-align: center;
+	/* Starting position */
+	-moz-transform:translateY(100%);
+	-webkit-transform:translateY(100%);	
+	transform:translateY(100%);
+	/* Apply animation to this element */	
+	-moz-animation: scroll-up 5s linear infinite;
+	-webkit-animation: scroll-up 15s linear infinite;
+	animation: scroll-up 15s linear infinite;
+   }
+   /* Move it (define the animation) */
+   @-moz-keyframes scroll-up {
+	0%   { -moz-transform: translateY(100%); }
+	100% { -moz-transform: translateY(-100%); }
+   }
+   @-webkit-keyframes scroll-up {
+	0%   { -webkit-transform: translateY(100%); }
+	100% { -webkit-transform: translateY(-100%); }
+   }
+   @keyframes scroll-up {
+	0%   { 
+	-moz-transform: translateY(100%); /* Browser bug fix */
+	-webkit-transform: translateY(100%); /* Browser bug fix */
+	transform: translateY(100%); 		
+	}
+	100% { 
+	-moz-transform: translateY(-100%); /* Browser bug fix */
+	-webkit-transform: translateY(-100%); /* Browser bug fix */
+	transform: translateY(-100%); 
+	}
+   }
+
+/*Footer*/
+
+.footer-dark {
+  padding:20px;
+  color:#f0f9ff;
+  background-color:#404040;
+}
+
+.footer-dark .item.social {
+  text-align:center;
+}
+
+
+.footer-dark .item.social > a {
+  font-size:20px;
+  width:36px;
+  height:36px;
+  line-height:36px;
+  display:inline-block;
+  text-align:center;
+  border-radius:50%;
+  box-shadow:0 0 0 1px rgba(255,255,255,0.4);
+  margin:0 8px;
+  color:#fff;
+  opacity:0.75;
+}
+
+
+.footer-dark .copyright {
+  text-align:center;
+  padding-top:20px;
+  opacity:0.8;
+  font-size:15px;
+  margin-bottom:0;
+}
+

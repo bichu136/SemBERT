@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Animenoriyuu - Watch Anime Online</title>
+
+	<link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="/static/style.css">
+	<link rel="stylesheet" type="text/css" href="/static/fontawesome/css/all.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+</head>
+<body>
+    <!-- <div> -->
+    <h1 style="text-align:center; color:aliceblue; font-weight:bolder;">Demo</h1>
+    <!-- </div> -->
+    <div class="container">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">câu 1</span>
+            </div>
+            <input id="sent1" type="text" class="form-control" placeholder="Sentence 1" >
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">câu 2</span>
+            </div>
+            <input id="sent2" type="text" class="form-control" placeholder="Sentence 2">
+        </div>
+        <button  class="btn btn-primary" onclick="onClick()">Inference</button>
+    </div>
+    <div class="container">
+    {% for i in suggest_sentences%}
+    <div style="margin-bottom:25px; background-color:gainsboro">
+        <div>
+            <span >câu 1</span>
+            <p >{{i[0]}} </p>
+        </div>
+        <div >
+            <span >câu 2</span>
+            <p >{{i[1]}} </p>
+       </div>
+        <div>
+            <span >gold</span>
+            <p >{{i[2]}} </p>
+        </div>
+    </div>
+
+    {%endfor%}
+    </div>>
+    <script>
+        function onClick()
+        {   
+            let sent1 = document.getElementById("sent1").value
+            let sent2 = document.getElementById("sent2").value
+            console.log(sent1)
+            let result = ""
+            const params = {
+                param1: sent1,
+                param2: sent2 
+            };
+            const options = {
+                method: 'POST',
+                body: JSON.stringify( params )  
+            };
+            fetch( 'http://127.0.0.1:13600/process', options )
+                .then( response => result = response.json() )
+                .then( response => { result = response["result"];
+                alert(result)
+            } );
+            
+        };
+    </script>
+</body>
+</html>
